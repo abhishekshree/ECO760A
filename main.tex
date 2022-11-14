@@ -1,0 +1,376 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper,]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lipsum}
+\usepackage{changepage}
+\usepackage{enumitem}
+\usepackage{graphicx}
+% \usepackage{geometry}
+%  \geometry{
+%  a4paper,
+%  total={170mm,257mm},
+%  left=20mm,
+%  top=20mm,
+%  }
+\usepackage{amsmath, amssymb, amsfonts, amsthm, fouriernc, mathtools}
+\usepackage{microtype}
+
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage[linesnumbered, ruled, vlined, algo2e]{algorithm2e} 
+
+\usepackage[svgnames]{xcolor}
+\definecolor{lightgrey}{rgb}{0.5,0.5,0.5}
+\definecolor{grey}{rgb}{0.25,0.25,0.25}
+\newcommand{\blackb}{\color{Black}}
+\newcommand{\lightgreyb}{\color{lightgrey}}
+
+\let\bold\textbf
+\newcommand\comb[2][^n]{\prescript{#1\mkern-0.5mu}{}C_{#2}}
+
+\usepackage{titlesec}
+\usepackage{sectsty}
+
+\sectionfont{\color{lightgrey}}
+\subsectionfont{\color{lightgrey}}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\renewcommand\thesection{\Roman{section}}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}}
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\SetKwComment{Comment}{$\triangleright$\ }{}
+
+\usepackage{chngcntr}
+\counterwithin*{equation}{section}
+
+\newcommand{\mysection}{
+\titleformat{\section} [runin] {\usefont{OT1}{lmss}{b}{n}\color{lightgrey}}
+{\thesection} {3pt} {} }
+
+\renewcommand{\theequation}{\thesection\arabic{equation}}
+
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@Aboxed}{\boxed{#1#2}}{\colorbox{black!15}{$#1#2$}}{}{}
+\patchcmd{\@boxed}{\boxed{#1#2}}{\colorbox{black!15}{$#1#2$}}{}{}
+\makeatother
+
+\title{\vspace{80mm}\lightgreyb A Study on the Product of Metric Spaces \\
+\lightgreyb ECO760A -  Term Paper}
+\author{Abhishek Shree \\ \texttt{shreea20@iitk.ac.in} \\ 200028}
+\date{\today}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[theorem]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{claim}{Claim}[subsection]
+\newenvironment{solution}
+  {\begin{proof}[Solution]}
+  {\end{proof}}
+\AfterEndEnvironment{theorem}{\noindent\ignorespaces}
+\renewcommand\thelemma{\arabic{section}.\arabic{lemma}}
+
+\newenvironment{myenv}{\begin{adjustwidth}{1cm}{}}{\end{adjustwidth}}
+
+% \renewcommand*{\abstractname}{\lightgreyb Abstract}
+
+\begin{document}
+\clearpage\maketitle
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+\renewcommand*{\abstractname}{\color{lightgrey}{Abstract}}
+
+\begin{abstract}
+    This paper aims to discuss the Cartesian product of finitely and countably infinite metric spaces. Explicitly, we would work out the Fréchet Metric for countably infinite metric spaces. Towards the end, the product of 
+\end{abstract}
+
+\section{Introduction}
+\subsection{Definition}
+Let $(X, d)$ and $(Y, d')$ be two metric spaces. The Cartesian product of $(X, d)$ and $(Y, d')$ is the metric space $(X \times Y, d'')$ where $d''$ is a valid metric for the space $X \times Y$, and maintains consistency with the metrics $d$ and $d'$.
+
+\subsection{Consistency of $d''$}
+Consistency of $d''$ ensures that the properties associated with the metric spaces initially are retained in some form after the Cartesian Product as well.
+
+For example, we consider two metrics, $(X_1, d_1)$ and $(X_2, d_2)$, for the cartesian product $(X_1 \times X_2, d_3)$. 
+We define $d_3$ as follows:
+$$
+d_3(x, y) = \rho(d_1, d_2) \text{, where } x \in X_1 \text{ and } y \in X_2
+$$
+where $\rho$ is a composition of the metrics $d_1$ and $d_2$, outputing another \emph{valid} metric.
+
+Choices for $\rho$:
+\begin{enumerate}
+    \item $$\rho = \max(d_1, d_2)$$ 
+    This ensures that in absence of $X_2$ in the product space, we get an equivalent metric space $(X_1, d_1)$, i.e. ${d_3(x, 0) \equiv d_1}$. Such a choice of $\rho$ is said to be consistent.
+    \item $$\rho = \begin{cases}
+        0 & \text{if } d_1 \ne d_2 \\
+        1 & \text{if } d_1 = d_2
+    \end{cases}$$ 
+    Here, in the absence of $X_2$ in the product space, we do not get an equivalent metric space $(X_1, d_1)$, but an arbitrary discrete metric. Hence, this choice of $\rho$ is \bold{not} consistent. 
+\end{enumerate}
+
+\section{Finite Product Spaces}
+For the metrics $(X_i, d_i), i \in [0, n]$ where $n \in \mathbb{R_{++}}$, the cartesian product is $(X = X_1 \times X_2 \dotsb \times X_n, d)$.
+
+For $d$ to be valid we can have a number of choices, but the consistency condition limits the choices of the product metric. Some popular choices for product metric are:
+\begin{enumerate}
+    \item $d(x, y) = \mathlarger{\sum_{i=1}^{n} d_i(x_i, y_i)}$
+    \item $d(x, y) = \mathlarger{\max_{0 \le i \le n} \{d_i(x_i, y_i)\}}$
+    % euclidean distance
+    \item $d(x, y) = \mathlarger{{\left(\sum_{i=1}^{n} (d_i(x_i, y_i))^p\right)}^{\frac{1}{p}}}$, where $p$ is arbitrarily fixed with $p \ge 1$ \\
+    where $x,y \in X$ and $x_i, y_i \in X_i$ in each case.
+\end{enumerate}
+
+% Fréchet metric
+\section{Countably Infinite Product Spaces}
+\subsection{The Problem}
+In case of countably infinite product spaces, say $(X_i, d_i), i \in [0, \infty)$ and the cartesian product $(X = X_1 \times X_2 \dotsb, d)$, all of the metrics discussed in section II cannot be used. The reason being that the sum may not diverge under this circumstance. For example, in choice 1,
+$$
+d(x, y) = {\sum_{i=1}^{\infty} d_i(x_i, y_i)}
+$$
+As $n \to \infty$, $d(x, y)$ does not necessarily converge.
+If, $\mathlarger{\lim_{i \to \infty}{\frac{d_{i+1}(x_{i+1}, y_{i+1})}{d_i(x_i, y_i)}}} > 1$, then $d(x, y)$ diverges. 
+\\
+\\
+This issue is resolved by weakening the consistency condition. 
+
+\subsection{Weak Consistency Condition}
+The consistency condition is weakened by allowing the product metric to be a \emph{valid} metric, but not necessarily equivalent to the original metric space.
+\\
+This can be done by cleverly choosing the composition $\rho$ of the metrics $d_i$.
+
+A popular choice of such metric is
+$$
+d(x, y) = \sum_{i=1}^{\infty} \frac{1}{2^i} \min\{1,d_i(x_i, y_i)\}
+$$
+
+\subsection{Fréchet Metric}
+The product metric shown above is just an example, and is not the only choice. Fréchet identified such kind of metric to metricize $\mathbb{R}^\infty$ initially.
+\\
+\\
+The form of the metric is
+\begin{equation}
+    \boxed{
+        d(x, y) = {\lim_{n \to \infty} \sum_{i=1}^{n} a_i f(d_i(x_i, y_i))}\text{, } x, y \in X \text{ and } x_i, y_i \in X_i
+        }
+        \tag{A}\label{eq:A}
+\end{equation}
+\\
+where $a_i$ is a sequence of positive real numbers, and $f$ is a function that is continuous on $[0, \infty)$.
+\\
+\\
+The form which Fréchet used consisted of $a_i=\mathlarger{\frac{1}{i!}}$ and $f(d_i(x_i, y_i)) = \mathlarger{\frac{|x_i-y_i|}{1+|x_i-y_i|} \text{, } x_i, y_i \in X_i}$, i.e. the metric is
+\\
+$$
+d(x, y) = {\lim_{n \to \infty} \sum_{i=1}^{n} \frac{1}{i!} \frac{|x_i-y_i|}{1+|x_i-y_i|}}\text{, } x, y \in X \text{ and } x_i, y_i \in X_i
+$$
+\\
+But this form can be generalized to a variety of combinations of $a_i$ and $f$, keeping the weak consistency condition in mind.
+% theorem
+\begin{theorem}
+    For a metric space $(X, d)$, the metric $d'$ defined by $\mathlarger{d'(x,y) = \frac{d(x,y)}{1+d(x,y)}}$ is also a metric for the same space.
+\end{theorem}
+\begin{proof}
+    For any function $f:X \times X \to \mathbb{R_+}$ to be a metric on $X$, it must satisfy the following conditions:
+    \begin{enumerate}
+        \item $f(x, y) \ge 0$ for all $x, y \in X$
+        \item $f(x, y) = 0$ if and only if $x = y$
+        \item $f(x, y) = f(y, x)$
+        \item $f(x, z) \le f(x, y) + f(y, z)$
+    \end{enumerate}
+    \underline{Given}: $x, y \in X$, and $d(x, y) \ge 0$ and $d$ satifies the above conditions.
+    \\
+    Consider the function $f$ defined by $\mathlarger{f(x,y) = \frac{d(x,y)}{1+d(x,y)}}$.
+    \begin{enumerate}
+        \item $\forall$ $x, y \in X$, $f(x, y) \ge 0$.
+        \item $f(x, y) = 0 \implies d(x, y) = 0 \implies x = y$.
+        \item $\mathlarger{f(x, y) = f(y, x) \implies \frac{d(x, y)}{1+d(x, y)} = \frac{d(y, x)}{1+d(y, x)} \implies d(x, y) = d(y, x)}$ which is true.
+        \item For x, y, z $\in$ X and $d(x,y) + d(y, z) \ge d(x, z)$, let $g(t) = \frac{t}{1+t}$ is increasing as $g'(t) = \frac{1}{(1+t)^2} > 0$. We have,
+        \begin{align*}
+            d(x, z) &\le d(x, y) + d(y, z) \\
+            g(d(x, y)) &\le g(d(x, y) + d(y, z)) \\
+            \frac{d(x, y)}{1+d(x, y)} &\le \frac{d(x, y) + d(y, z)}{1+d(x, y)+d(y, z)} \\
+            f(x, z) &\le f(x, y) + f(y, z)
+        \end{align*}
+    \end{enumerate}
+    As, $f$ satisfies all the conditions, it is a metric for the space spanned by $X$.
+\end{proof}
+\vspace{0.4cm}
+\begin{theorem}
+    For a metric space $(X, d)$, the metric $\mathlarger{d'(x,y) = \frac{d(x,y)}{1+d(x,y)}}$ and $d$ are equivalent.
+\end{theorem}
+
+\begin{proof}
+    To prove that $d$ and $d'$ are equivalent, showing that a sequence $\{x_m\} \in X$, $m\in\mathbb{N}$ which converges to $x \in X$ in $d$ if and only if it converges to $x$ in $d'$ is sufficient.
+    
+    \bold{Case 1}: 
+
+    We take a sequence $\{x_m\} \in X$, $m\in\mathbb{N}$ which converges to $x \in X$ in $d$.
+
+    $$\implies d(x_m, x) \to 0$$
+
+    Then, 
+    $$
+    d'(x_m, x) = \frac{d(x_m, x)}{1+d(x_m, x)} \le d(x_m, x) \implies d'(x_m, x) \to 0
+    $$
+    $$
+    \implies \{x_m\} \text{ converges to } x \text{ in } d'
+    $$
+
+    \bold{Case 2}:
+    We take a sequence $\{x_m\} \in X$, $m\in\mathbb{N}$ which converges to $x \in X$ in $d'$.
+    $$\implies d'(x_m, x) \to 0$$
+
+    Then,
+    $$
+    d'(x_m, x) = \frac{d(x_m, x)}{1+d(x_m, x)} \to 0
+    $$
+    $$
+    \implies d(x_m, x) \text{ is \bold{bounded} by some } M > 0
+    $$
+    To prove this we can use contradiction. Assuming that $d(x_m, x)$ is unbounded and tends to $+\infty$, we get $\mathlarger{d'(x_m, x) = 1 - \frac{1}{1-d(x_m, x)} \to 1}$ contradicting our assumption that $d'(x_m, x) \to 0$.
+
+    $$
+    \therefore \frac{d(x_m, x)}{1+M} \le d'(x_m, x) \le \frac{d(x_m, x)}{1+d(x_m, x)} = d'(x_m, x)
+    $$
+    As $d'(x_m, x) \to 0$ and $M > 0$, we get $d(x_m, x) \to 0$.
+    $$
+    \implies \{x_m\} \text{ converges to } x \text{ in } d
+    $$
+
+    By cases 1 and 2, we have shown that $d$ and $d'$ are equivalent.
+\end{proof}
+\vspace{0.4cm}
+\begin{lemma}
+    For a sequence of positive real numbers $\{a_m\}$, $m \in \mathbb{N}$, the sum of the sequence $\mathlarger{\sum_{m=1}^{\infty} a_m}$ is finite if $\mathlarger{\lim_{m \to \infty} \frac{a_{m+1}}{a_m} < 1}$.
+\end{lemma}
+\vspace{0.4cm}
+\begin{remark}
+\label{remark1}
+With the above analysis, we can say that 
+    \begin{itemize}
+        \item From Theorems 1 and 2, we conclude that a mapping $f$ in equation \ref{eq:A} can take the form $\mathlarger{f(d_i(x_i, y_i)) = \frac{d_i(x_i, y_i)}{1+d_i(x_i, y_i)}}$
+        \item From Lemma 1, we conclude that $a_i$'s in equation \ref{eq:A} need to satisfy $\mathlarger{\lim_{m \to \infty} \frac{a_{m+1}}{a_m} < 1}$, and a large number of such $a_i$'s exist.
+    \end{itemize}
+\end{remark}
+
+\subsubsection*{\lightgreyb Improvements on Fréchet's Idea}
+
+As a consequence of remark \ref{remark1} the domain of product metric for countably infinite number of metric spaces can take various forms. 
+\\
+Another form of a popular product metric is given as $d:X \times X \to \mathbb{R_+}$
+\[
+    \boxed{
+        d(x, y) = \sum_{i=1}^{\infty} \frac{1}{2^i}\frac{d_i(x_i, y_i)}{1+d_i(x_i, y_i)}   
+    }
+\]
+
+\subsection{Some Important Results}
+\begin{lemma}
+    \label{seq}
+    For a cartesian product defined on $(X_i, d_i), i \in [0, \infty)$ and $(X = X_1 \times X_2 \dotsb, d)$, for any sequence ${x^m}$ in $X$ we have $x^m \to x$ iff $x^m_i \to x_i \forall i \in [0, \infty)$.
+\end{lemma}
+\vspace{0.4cm}
+\begin{theorem}
+    For metric spaces $(X_i, d_i), i \in [0, \infty)$ and $(X = X_1 \times X_2 \dotsb, d)$ be the cartesian product. Then,
+    \begin{enumerate}
+        \item If each $(X_i, d_i)$ are separable, then $(X, d)$ is separable.
+        \item If each $(X_i, d_i)$ are connected, then $(X, d)$ is connected.
+        \item If each $(X_i, d_i)$ are complete, then $(X, d)$ is complete.
+        \item If each $(X_i, d_i)$ are compact, then $(X, d)$ is compact (Tychonoff's theorem).
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    We will proceed by proving each of the above statements separately.
+    \begin{enumerate}
+        \vspace{0.2cm}
+        \item {
+            Let $D$ be a dense subset of $X$. We define a mapping $\pi_{X_i}: X \to X_i$.
+
+            We will show that $\pi_{X_i}(D)$ is a dense subset of $X_i$.
+            
+            Let $M$ be an open subset of $X_i$. Then, $\Pi \tilde{X_i} = M \times X_1 \times X_2 \dotsb X_{i-1} \times X_{i+1} \times \dotsb$ is an open subset of $X$.
+
+            $\because D$ is dense in $X$, so $\Pi \tilde{X_i}$ contains some elements of $D$ as well, so $\pi_{X_i}(\Pi \tilde{X_i})$ contains some elements of $\pi_{X_i}(D)$ (as each of $X_i$'s are separable).
+
+            Hence we are successful in finding a dense subset of $X$ which is also countable. So, $X$ is separable.
+
+            \bold{NOTE}: It can also be thought of as a countable union of countable metric spaces, making the product space countable as well. Hence, separable.
+        }
+        \vspace{0.2cm}
+        \item { We define a lemma to prove the statement.
+            \begin{lemma}
+                A metric space $(X, d)$ is connected if and only if every continuous function $f: X \to \{0, 1\}$ is constant. \\
+                More generally, a metric space $(X, d)$ is connected if and only if every continuous function $f: X \to \mathbb{D}$ is constant, for every discrete space $\mathbb{D}$ \cite{3919752}.
+            \end{lemma}
+            Given, $X_i$'s are connected, there exists a continuous function $f_i: X_i \to \{0, 1\}$ such that $f_i(x_i) = 0$ or $1$ for all $x_i \in X_i$.
+
+            We can compose individual $f_i$'s to form a function $f: X \to \{0, 1\}$, such that $f(x) = 0 \forall x \in X$ (one way to do that is to take $f(x) = \prod_{i=1}^{\infty} f_i(x_i)$).
+            
+            Hence, $X$ is connected given $X_i$'s are connected using the above lemma.
+        }
+        \vspace{0.2cm}
+        \item {
+            Let $\{x^m\}$ be a Cauchy sequence in $X$. Then, $\{x^m_i\}$ is a Cauchy sequence in $X_i$ for all $i \in [0, \infty)$. 
+            
+            By Lemma \ref{seq}, $\{x^m_i\}$ converges to $x_i \in X_i$ (as $X_i$'s are complete) for all $i \in [0, \infty)$ and hence $x^m \to x$ consisting of $x_i$'s for all $i \in [0, \infty)$.
+
+            $\because$ Every Cauchy sequence in $X$ converges to a point in $X$, we can say that $X$ is complete.
+        }
+        \vspace{0.2cm}
+        \item {
+            We can use sequential compactness to prove this statement.
+            
+            Let $\{x^m\} \to x^*$ be any sequence in $X$. 
+            
+            Given all of $X_i$'s are compact, the sequence $\{x^m_i \in X_i\}$ has a subsequence $\{x^{m_k}_i \in X_i\}$ which converges to some $x_i \in X_i$ for all $i \in [0, \infty)$ (as $X_i$'s are compact).
+
+            By Lemma \ref{seq}, we can generate a subsequence of $\{x^{m_k}\}$ in $X$ which pointwise converges to $\{x_i\} \forall i \in [0, \infty)$ where $x_i \in X_i$.
+            
+            Hence, $X$ is compact.
+        }
+    \end{enumerate}
+\end{proof}
+
+\section{Uncountable and Infinite Product Spaces?}
+Defining a cartesian product on uncountably infinite space is of minimal and a standard definition for the imposed metric does not exist. 
+\\
+\\
+Example:
+\\
+Let $\mathlarger{X = \prod_{i \in \mathbb{R}}X_i}$ be a cartesian product of uncountably infinite spaces $X_i$'s. 
+\\
+Choices of metric $d$ on $\mathlarger{X = \prod_{i \in \mathbb{R}}X_i}$ are:
+\begin{enumerate}
+    \item {
+        The metric $\mathlarger{d(x,y) = \max_{i \in \mathbb{R}}d_i(x_i,y_i)}$ or $\mathlarger{d(x,y) = \sup_{i \in \mathbb{R}}d_i(x_i,y_i)}$, where $d_i(x_i,y_i)$ is the metric on $X_i$. 
+        \\
+        This cannot be a metric for all choices of $X_i$'s. A counterexample is $X_i = \mathbb{R}$, $x_i = i$ and $y_i = 0$. The value of $d(x,y) \to \infty$ in such a case.
+    }
+    \item {
+        Similarly, the metric $\mathlarger{d(x,y) = \min_{i \in \mathbb{R}}d_i(x_i,y_i)}$ or $\mathlarger{d(x,y) = \inf_{i \in \mathbb{R}}d_i(x_i,y_i)}$ cannot be a metric for all choices of $X_i$'s. 
+
+        In such a case, the value of the infrimum could be zero for some $x, y \in X$ where $x \ne y$ as well.
+    }
+    \item Any combinations for representing the sum in a bounded form would also be very volatile and dependent on the choice of $X_i$'s.
+    \item The discrete metric would still hold as a metric on $\mathlarger{X = \prod_{i \in \mathbb{R}}X_i}$. But it is not of much use in practicality. 
+\end{enumerate}
+
+\begin{remark}
+    It can be stated that the product of uncountably infinite metric spaces is not metricizable \cite{infinite}.
+\end{remark}
+
+%%%%%%%%5 BIBTEX
+\nocite{*}
+\bibliographystyle{unsrt}
+% \renewcommand*{\bibfont}{\small}
+\bibliography{ref}
+
+\end{document}
